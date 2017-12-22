@@ -96,7 +96,6 @@
 </template>
 
 <script>
-
 var Transaction = {
   'user': {
     'id': 1
@@ -144,7 +143,7 @@ export default {
       event.target.classList.add('active')
     },
     selectAction: function (event) {
-      // Stop the button clikc submitting the form
+      // Stop the button click submitting the form
       event.preventDefault()
       // Set the value of the select action on the model
       this.transaction.action = event.target.value
@@ -198,7 +197,6 @@ export default {
       return transaction
     },
     getCurrentTransaction: function () {
-      console.log(this.Transaction)
       if (this.$route.name === 'edit') {
         const url = 'transactions/' + this.$route.params.id + '/'
         this.$http.get(url).then(response => {
