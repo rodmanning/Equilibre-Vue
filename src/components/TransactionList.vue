@@ -1,7 +1,9 @@
 <template>
   <div>
     <page-title v-bind:title="'Transactions'" v-bind:icon="'list'"></page-title>
-    <div class="uk-container uk-align-center uk-section uk-margin-remove-top uk-padding-large uk-padding-remove-top">
+    <div class="uk-container uk-align-center
+                uk-section uk-margin-remove-top uk-padding-large
+                uk-padding-remove-top">
       <div class="uk-placeholder" v-if="loading">
         <div uk-spinner></div>&emsp;
         Loading data ...

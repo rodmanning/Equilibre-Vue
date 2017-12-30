@@ -1,28 +1,39 @@
 <template>
-<table class="uk-table uk-table-divider uk-table-responsive">
+<table class="uk-table uk-table-divider">
   <caption>Available Transactions</caption>
   <thead class="thead-light">
     <tr>
-      <th></th>
       <th>Date</th>
-      <th>Account</th>
-      <th>Amount</th>
       <th colspan="2">Details</th>
+      <th class="uk-visible@m" colspan="2">Details</th>
     </tr>
   </thead>
   <tbody>
     <tr v-for="transaction in transactions">
       <td>
-        <router-link v-bind:to="editUrl(transaction)">Edit</router-link>
+        <router-link v-bind:to="editUrl(transaction)">
+          {{ localeDate(transaction.date) }}
+        </router-link>
       </td>
-      <td>{{ localeDate(transaction.date) }}</td>
       <td>
-        <img v-bind:src="transaction.account.icon" height="20px"/> &emsp;
-        {{ transaction.account.name }}
+        <!-- Tablets and desktops -->
+        <span class="uk-visible@m">
+          <img v-bind:src="transaction.account.icon"/> <br />
+          {{ transaction.account.name }}
+        </span>
+        <!-- Mobile devices -->
+        <span class="uk-hidden@m">
+          <img v-bind:src="transaction.account.icon"/>
+        </span>
       </td>
       <td>$ {{(transaction.amount * transaction.action).toFixed(2)}}</td>
-      <td><span uk-icon="icon: tag"></span> <strong>{{transaction.category.name}}</strong></td>
-      <td><span> {{transaction.description}}</span></td>
+      <td>
+        <span uk-icon="icon: tag"></span>
+        &nbsp;<strong>{{transaction.category.name}}</strong>
+      </td>
+      <td class="uk-visible@s">
+        {{transaction.description}}
+      </td>
     </tr>
   </tbody>
 </table>
@@ -52,6 +63,9 @@ export default {
 
 <style scoped>
 img {
-    height: 3em !important;
+    min-height: 2em !important;
+    min-width: 2em !important;
+    max-height: 3em !important;
+    max-width: 4em !important;
 }
 </style>

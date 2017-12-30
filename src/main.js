@@ -8,7 +8,8 @@ import auth from './auth'
 
 Vue.use(VueResource)
 
-Vue.http.options.root = 'http://localhost:8000/api/'
+Vue.http.options.root = 'http://192.168.178.31:8000/api/'
+// Vue.http.options.root = 'http://localhost:8000/api/'
 Vue.http.options.emulateJSON = true
 
 Vue.config.productionTip = false
@@ -23,13 +24,6 @@ Vue.http.interceptors.push(function (request, next) {
       request.headers.set(key, authHeader[key])
     }
   }
-  // continue to next interceptor
-  next()
-})
-
-// Add Access-Control-Allow-Origin header
-Vue.http.interceptors.push(function (request, next) {
-  request.headers.set('Access-Control-Allow-Origin', '*')
   next()
 })
 
@@ -64,11 +58,29 @@ new Vue({
     accounts: {},
     categories: {},
     store: this.$store,
-    error: {'code': 499}
+    error: undefined,
+    nonFieldError: undefined,
+    submitted: false
   },
   methods: {
-    raiseError: function (error) {
-      console.log(error)
+    raiseError: function (errors) {
+      // Handle errors by distinguishing between field and non-field errors.
+      //
+      // Non-field errors are stored in the `nonFieldError` variable, whilst
+      // field errors are stored in the normal `error` variable.
+      this.error = {}
+      this.nonFieldError = undefined
+      for (let err of Object.keys(errors.body)) {
+        console.log(err)
+        if (err === 'non_field_errors') {
+          this.nonFieldError = errors.body[err]
+          delete errors.body[err]
+          this.error = errors
+        }
+      }
+      this.error = errors.body
+      console.log(this.error)
+      this.submitted = false
     },
     getInitialData: function () {
       this.getCategoryData()

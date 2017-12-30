@@ -5,21 +5,21 @@
     <div class="uk-container-small uk-align-center uk-section uk-margin-remove-top uk-padding-small uk-section-muted uk-padding-large-left uk-padding-large-right">
       <form class="uk-form-stacked uk-text-left">
         <div class="uk-margin uk-margin-left">
-          <div class="uk-form-label" for="form-accounts">Account</div>
+          <label class="uk-form-label" for="form-accounts">Account</label>
 
-          <div class="uk-form-controls
-                      uk-flex uk-flex-wrap uk-flex-1"
-               name="form-accounts">
-
-            <div v-for="(acc, index) in accounts" class="accountRadio">
-              <button class="uk-button uk-button-small uk-button-default"
-                      v-model="transaction.account.id"
-                      v-bind:value="acc.id"
-                      v-bind:id="'acc-btn-' + index"
-                      v-on:click="selectAccount">
-                <img :src="acc.icon" />
-              </button>
+          <div class="uk-form-controls uk-grid uk-flex uk-margin-large-right"
+               name="form-accounts" uk-grid>
+            <div class="uk-width-3-5">
+              <select class="uk-select" name="selectAccount" placeholder="Select ..."
+                      v-model="transaction.account.id">
+                <option v-for="acc of accounts" v-bind:value="acc.id">
+                  {{ acc.name }}</option>
+              </select>
             </div>
+            <div id="accountIcon" class="uk-width-2-5">
+              <img class="uk-align-center" v-if="accountIcon" v-bind:src="accountIcon" />
+            </div>
+
           </div>
         </div>
 
@@ -27,28 +27,22 @@
 
           <label for="amountInput" class="uk-form-label">Amount</label>
 
-          <div class="uk-grid uk-flex" uk-grid>
+          <div class="uk-grid-small" uk-grid>
 
-            <div class="uk-width-2-5">
-              <button name="form-actions" id="option-credit" value="1"
-                      class="uk-button uk-button uk-button-default uk-width-2-5@m"
-                      v-model="transaction.action"
-                      v-on:click="selectAction">
-                Credit
-              </button>
-              <button name="form-actions" id="option-debit" value="-1"
-                      class="uk-button uk-button uk-button-default uk-width-2-5@m"
-                      v-model="transaction.action"
-                      v-on:click="selectAction">
-                Debit
-              </button>
+            <div class="uk-width-1-4@s">
+              <select class="uk-input uk-select" name="selectAction" placeholder="Select ..."
+                      v-model="transaction.action">
+                <option value="1">Credit (+)</option>
+                <option value="-1">Debit (-)</option>
+              </select>
             </div>
-
-            <div class="uk-width-3-5">
-              <input class="uk-form-large uk-input"
-                     id="amountInput" type="number" placeholder="$ ___ . __  "
-                     step="0.01" min="0" max="100000"
-                     v-model="transaction.amount">
+            <div class="uk-width-3-4@s">
+              <div class="uk-inline cstm-fullwidth">
+                <span class="uk-form-icon">$</span>
+                <input class="uk-input uk-form-large" id="amountInput" type="number" placeholder="___ . __  "
+                       step="0.01" min="0" max="100000"
+                       v-model="transaction.amount">
+              </div>
             </div>
 
           </div>
@@ -96,78 +90,57 @@
 </template>
 
 <script>
-var Transaction = {
-  'user': {
-    'id': 1
-  },
-  'account': {
-    'id': null
-  },
-  'category': {
-    'id': null
-  },
-  'action': null,
-  'amount': null,
-  'date': null,
-  'description': null
-}
-
 export default {
   name: 'TransactionDetailForm',
   data: function () {
     return {
       'accounts': this.$store.state.accounts,
       'categories': this.$store.state.categories,
-      'transaction': Transaction
+      'accountIcon': '',
+      'transaction': {
+        'user': {
+          'id': 1
+        },
+        'account': {
+          'id': null
+        },
+        'category': {
+          'id': null
+        },
+        'action': null,
+        'amount': null,
+        'date': null,
+        'description': null
+      }
     }
   },
   created () {
     this.getCurrentTransaction()
   },
   watch: {
-    'getCurrentTransaction': this.getCurrentTransaction
+    'this.$route': this.getCurrentTransaction,
+    'transaction.account.id': function () {
+      const account = this.accounts.find(
+        obj => obj.id === this.transaction.account.id)
+      this.accountIcon = account.icon
+    }
+
   },
   methods: {
     // UI Functions
-    selectAccount: function (event) {
-      // Stop the button clikc submitting the form
-      event.preventDefault()
-      // Set the value of the selected account on the model
-      this.transaction.account.id = event.target.value
-      // Set all other buttons to inactive
-      const accountButtons = document.querySelectorAll('button[id^="acc-btn-"]')
-      for (var btn of accountButtons) {
-        btn.classList.remove('active')
-      }
-      // Set this button to active
-      event.target.classList.add('active')
-    },
-    selectAction: function (event) {
-      // Stop the button click submitting the form
-      event.preventDefault()
-      // Set the value of the select action on the model
-      this.transaction.action = event.target.value
-      // Toggle the buttons
-      const actionButtons = document.querySelectorAll('button[id^="option-"]')
-      for (const btn of actionButtons) {
-        btn.classList.remove('active')
-      }
-      event.target.classList.add('active')
-    },
     submit: function (event) {
       // Suppress the normal 'submit' action
       event.preventDefault()
       // Send the data to the API
       this.transaction.user.id = 1
       const data = this.setAPIData(this.transaction)
-      // this.transaction.account = this.transaction.account.id
-      // this.transaction.category = this.transaction.category.id
-      if (this.$route.name === 'create') {
+      if (this.$route.name === 'Create') {
         this.createTransaction(data)
-      } else if (this.$route.name === 'edit') {
+      } else if (this.$route.name === 'Edit') {
         this.updateTransaction(data)
       }
     },
+
     // API functions
     createTransaction: function (data) {
       // Create a new transaction
@@ -178,6 +151,7 @@ export default {
         console.log(error)
       })
     },
+
     updateTransaction: function (data) {
       // Update an existing transaction
       const url = 'transactions/' + this.$route.params.id + '/'
@@ -188,6 +162,7 @@ export default {
         console.log(error)
       })
     },
+
     // Data functions
     setAPIData: function (transaction) {
       // Function to set pk's (etc.) for certain API fields
@@ -196,31 +171,16 @@ export default {
       transaction.account_id = transaction.account.id
       return transaction
     },
+
     getCurrentTransaction: function () {
-      if (this.$route.name === 'edit') {
+      if (this.$route.name === 'Edit') {
         const url = 'transactions/' + this.$route.params.id + '/'
         this.$http.get(url).then(response => {
           this.transaction = response.body
-
-          // Set the details for the action buttons
-          const actionButtons = document.querySelectorAll('button[id^="option-"]')
-          for (const btn of actionButtons) {
-            if (+btn.value === this.transaction.action) {
-              btn.classList.add('active')
-            } else {
-              btn.classList.remove('active')
-            }
-          }
-
-          // Set the details for the account buttons throught the obj PK
-          const accountButtons = document.querySelectorAll('button[id^="acc-btn-"]')
-          for (var btn of accountButtons) {
-            if (+btn.value === this.transaction.account.id) {
-              btn.classList.add('active')
-            } else {
-              btn.classList.remove('active')
-            }
-          }
+          // Set the account icon
+          const account = this.accounts.find(
+            obj => obj.id === this.transaction.account.id)
+          this.accountIcon = account.icon
         }, error => {
           console.log(error)
         })
@@ -240,10 +200,13 @@ label {
     margin-left: 0.3em;
     margin-right: 2.5em;
 }
+#accountIcon {
+    height: 2em;
+}
 img {
-    height: auto;
-    min-width: 2em;
-    max-width: 4em;
+    margin-top: -1em;
+    margin-left: 35%;
+    max-height: 6em;
 }
 .row {
     padding-top: 2em;
@@ -259,5 +222,11 @@ button.active {
 button.uk-button-large,
 input, select {
     min-width: 140px;
+}
+.uk-form-large {
+    padding-left: 32px !important;
+}
+cstm-fullwidth {
+     width: 100% !important;
 }
 </style>

@@ -36,7 +36,7 @@ export default {
       context.$root.$store.setState('user', {})
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
-      context.$root.error = error
+      context.$root.raiseError(error)
     })
   },
 

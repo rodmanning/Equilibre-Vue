@@ -19,8 +19,8 @@
         </div>
       </div>
       <h2>Account Balances</h2>
-      <div class="uk-placeholder uk-margin-large-left uk-margin-large-right">
-        <table class="uk-table uk-table-divider uk-table-responsive">
+      <div class="uk-placeholder uk-margin-small-left uk-margin-small-right">
+        <table class="uk-table uk-table-divider">
           <thead>
             <tr>
               <th>Account</th>
@@ -31,7 +31,7 @@
           <tbody>
             <tr v-for="b of balances">
               <td>
-                <img v-bind:src="b.account.icon"/> &emsp;
+                <img v-bind:src="b.account.icon"/> <br />
                 {{ b.account.name }}
               </td>
               <td>
