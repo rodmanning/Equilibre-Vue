@@ -10,7 +10,7 @@ export default {
   },
 
   login: function (context, credentials, redirect) {
-    context.$http.post(LOGIN_URL, credentials).then(response => {
+    context.$http.post(LOGIN_URL, credentials, {timeout: 10000}).then(response => {
       // Save the tokens
       localStorage.setItem('accessToken', response.body.access)
       localStorage.setItem('refreshToken', response.body.refresh)
@@ -40,11 +40,12 @@ export default {
     })
   },
 
-  logout: function () {
-    this.$root.$store.user = {}
+  logout: function (context) {
+    context.$root.$store.user = {}
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
-    this.user.isAuthenticated = false
+    context.$root.$store.setState('user', {})
+    context.$router.go('/')
   },
 
   checkAuth: function (user) {

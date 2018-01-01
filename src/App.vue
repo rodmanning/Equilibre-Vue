@@ -28,4 +28,10 @@ export default {
 h1, h2, h3, h4 {
   font-familt: 'Roboto', Helvetiva, Arial, sans-serif
 }
+h1, h2 {
+  font-weight: normal;
+}
+.negative {
+    color: red;
+}
 </style>

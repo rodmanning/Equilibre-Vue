@@ -71,6 +71,16 @@
                  class="uk-form-label">Description</label>
           <input class="uk-input" name="textDescription" v-model="transaction.description"/>
         </div>
+
+        <div class="uk-margin uk-margin-left uk-margin-large-right">
+          <label>
+            <input name="taxDeduction" type="checkbox"
+                   class="uk-checkbox"
+                   v-model="transaction.tax_deduction" />
+            Tax deduction?
+          </label>
+        </div>
+
         <button v-on:click="submit"
                 class="uk-button uk-button-primary uk-button-large
                        uk-margin-top uk-margin-left">
@@ -110,7 +120,8 @@ export default {
         'action': null,
         'amount': null,
         'date': null,
-        'description': null
+        'description': null,
+        'tax_deduction': null
       }
     }
   },
@@ -218,10 +229,6 @@ img {
 }
 button.active {
     background-color: #1e87f099;
-}
-button.uk-button-large,
-input, select {
-    min-width: 140px;
 }
 .uk-form-large {
     padding-left: 32px !important;

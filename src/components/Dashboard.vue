@@ -35,7 +35,7 @@
                 {{ b.account.name }}
               </td>
               <td>
-                <span v-bind:class="{'negative': isNegative}">
+                <span v-bind:class="{'negative': b.value < 0}">
                   ${{ b.value }}
                 </span>
               </td>
@@ -63,15 +63,6 @@ export default {
     // Update data if route changes
     '$route': this.getBalances
   },
-  computed: {
-    isNegative: function (num) {
-      if (num < 0) {
-        return true
-      } else {
-        return true
-      }
-    }
-  },
   methods: {
     getBalances: function () {
       this.$http.get('balances/').then(response => {
@@ -91,9 +82,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
 ul {
   list-style-type: none;
   padding: 0;
@@ -108,8 +96,5 @@ a {
 }
 img {
     height: 3em !important;
-}
-.negative {
-    color: red;
 }
 </style>

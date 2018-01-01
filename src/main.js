@@ -68,10 +68,15 @@ new Vue({
       //
       // Non-field errors are stored in the `nonFieldError` variable, whilst
       // field errors are stored in the normal `error` variable.
-      this.error = {}
-      this.nonFieldError = undefined
+      // Handle server timeout errors
+      if (errors.status === 0) {
+        this.nonFieldError = {
+          'non_field_errors': 'Sorry, the server isn\'t available. Try again later'
+        }
+      } else {
+        this.nonFieldError = undefined
+      }
       for (let err of Object.keys(errors.body)) {
-        console.log(err)
         if (err === 'non_field_errors') {
           this.nonFieldError = errors.body[err]
           delete errors.body[err]

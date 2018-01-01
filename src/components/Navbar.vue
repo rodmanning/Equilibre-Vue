@@ -5,8 +5,9 @@
     <div class="uk-navbar-left">
       <ul class="uk-navbar-nav">
         <li>
-          <router-link class="navbar-brand" to="/">
-            <span uk-icon="icon: credit-card"></span>&nbsp;
+          <router-link class="navbar-brand" to="/"
+                       v-bind:class="{active: active.Dashboard}">
+            <span uk-icon="icon: home"></span>&nbsp;
             Equilibre
           </router-link>
         </li>
@@ -14,13 +15,6 @@
     </div>
     <div v-if="isAuthenticated" class="uk-navbar-right">
       <ul class="uk-navbar-nav">
-        <li>
-          <router-link class="nav-link" to="/"
-                       v-bind:class="{active: active.Dashboard}">
-            <span uk-icon="icon: home"></span>&ensp;
-            <span class="uk-visible@m">Home</span>
-          </router-link>
-        </li>
         <li>
           <router-link class="nav-link" to="/list"
                        v-bind:class="{active: active.List}">
@@ -35,6 +29,13 @@
             <span class="uk-visible@m">Add</span>
           </router-link>
         </li>
+        <li>
+          <a class="nav-link" v-on:click="callLogout">
+            <span uk-icon="icon: sign-out"></span>&ensp;
+            <span class="uk-visible@m">Logout</span>
+          </a>
+        </li>
+
       </ul>
     </div>
   </nav>
@@ -42,6 +43,8 @@
 </template>
 
 <script>
+import auth from '@/auth'
+
 export default {
   name: 'Navbar',
   data: function () {
@@ -67,6 +70,11 @@ export default {
           this.active[path] = false
         }
       }
+    }
+  },
+  methods: {
+    callLogout: function () {
+      auth.logout(this)
     }
   }
 }

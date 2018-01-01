@@ -1,11 +1,12 @@
 <template>
-<table class="uk-table uk-table-divider">
+<table class="uk-table uk-table-small uk-table-justify uk-table-divider">
   <caption>Available Transactions</caption>
   <thead class="thead-light">
     <tr>
       <th>Date</th>
+      <th class="uk-visible@s">Account</th>
+      <th class="uk-visible@s">Amount</th>
       <th colspan="2">Details</th>
-      <th class="uk-visible@m" colspan="2">Details</th>
     </tr>
   </thead>
   <tbody>
@@ -26,7 +27,11 @@
           <img v-bind:src="transaction.account.icon"/>
         </span>
       </td>
-      <td>$ {{(transaction.amount * transaction.action).toFixed(2)}}</td>
+      <td class="uk-text-nowrap">
+        <span v-bind:class="{'negative': transaction.action === -1}">
+          $ {{(transaction.amount * transaction.action).toFixed(2)}}
+        </span>
+      </td>
       <td>
         <span uk-icon="icon: tag"></span>
         &nbsp;<strong>{{transaction.category.name}}</strong>
