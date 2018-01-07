@@ -8,7 +8,7 @@ import auth from './auth'
 
 Vue.use(VueResource)
 
-Vue.http.options.root = 'http://192.168.178.31:8000/api/'
+Vue.http.options.root = 'http://localhost:8000/api/'
 // Vue.http.options.root = 'http://localhost:8000/api/'
 Vue.http.options.emulateJSON = true
 
@@ -63,6 +63,10 @@ new Vue({
     submitted: false
   },
   methods: {
+    resetErrors: function () {
+      this.nonFieldError = undefined
+      this.error = undefined
+    },
     raiseError: function (errors) {
       // Handle errors by distinguishing between field and non-field errors.
       //
