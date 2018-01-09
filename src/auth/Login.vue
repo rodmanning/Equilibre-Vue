@@ -6,7 +6,7 @@
     </div>
 
     <div class="uk-section uk-section-muted uk-section
-                uk-text-left uk-padding-small">
+                uk-text-left uk-padding uk-padding-remove-horizontal">
       <form class="uk-form-horizontal uk-margin-large-left uk-margin-large-right">
         <div v-if="nonFieldError" class="uk-alert-danger uk-margin-remove-top" uk-alert>
           <h3>Error!</h3>

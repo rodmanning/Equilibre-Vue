@@ -4,7 +4,7 @@
       v-bind:title="'Transaction'" v-bind:icon="'plus-circle'"></page-title>
     <div class="uk-container-small uk-align-center
                 uk-section-muted uk-section
-                uk-margin-remove-top uk-padding-small
+                uk-margin-remove-top uk-padding
                 uk-padding-large-left uk-padding-large-right
                 uk-padding-large-top">
       <form class="uk-form-stacked uk-text-left">
